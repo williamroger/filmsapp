@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ResponseMDB } from '../interfaces/interfaces';
 
+import { environment } from './../../environments/environment';
+
+const URL = environment.url;
+const apiKey = environment.apiKey;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -9,7 +14,31 @@ export class MoviesService {
 
   constructor(private http: HttpClient) { }
 
+  private executeQuery<T>(query: string) {
+    query = URL + query;
+    query += `&api_key=${apiKey}&language=pt&include_image_language=pt`;
+
+    return this.http.get<T>(query);
+  }
+
   getFeature() {
-    return this.http.get<ResponseMDB>(`https://api.themoviedb.org/3/discover/movie?primary_release_date.gte=2019-09-01&primary_release_date.lte=2019-10-09&api_key=b865a13f87207843ebf68c97ed808500&language=pt&include_image_language=pt`)
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const month = now.getMonth() + 1;
+
+    let monthString;
+
+    if (month < 10) {
+      monthString = '0' + month;
+    } else {
+      monthString = month;
+    }
+
+    const start = `${now.getFullYear()}-${monthString}-01`;
+    const end = `${now.getFullYear()}-${monthString}-${lastDay}`;
+
+    return this.executeQuery<ResponseMDB>(`/discover/movie?primary_release_date.gte=${start}&primary_release_date.lte=${end}`);
+
+
   }
 }
