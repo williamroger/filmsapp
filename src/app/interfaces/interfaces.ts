@@ -2,10 +2,10 @@ export interface ResponseMDB {
   page: number;
   total_results: number;
   total_pages: number;
-  results: Film[];
+  results: Movie[];
 }
 
-export interface Film {
+export interface Movie {
   popularity: number;
   vote_count: number;
   video: boolean;
