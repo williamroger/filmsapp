@@ -15,7 +15,6 @@ export class PairsPipe implements PipeTransform {
       return result;
     }, []);
 
-    console.log(pares);
     return pares;
   }
 
